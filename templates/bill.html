@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bill Receipt</title>
+  <style>
+    body {
+      font-family: {{ theme.font_family | default('"Courier New", monospace') }};
+      max-width: 300px;
+      margin: auto;
+      padding: 10px;
+      border: {{ theme.border_style | default('1px dashed #000') }};
+      background: {{ theme.bg | default('white') }};
+      color: {{ theme.font_color | default('black') }};
+    }
+    .center {
+      text-align: center;
+    }
+    .top {
+      margin: 5px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: {{ theme.font_size | default('14px') }};
+    }
+    th, td {
+      text-align: left;
+      padding: 4px 0;
+    }
+    .totals {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .bottom {
+      text-align: center;
+      margin-top: 20px;
+      font-size: {{ theme.footer_font_size | default('12px') }};
+    }
+    hr {
+      border: 0;
+      border-top: {{ theme.hr_style | default('1px dashed #000') }};
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="center top">
+    <h3>{{ theme.header_text | default('WELCOME!!!') }}</h3>
+    <p>{{ theme.sub_header_text | default('Original Receipt') }}</p>
+  </div>
+
+  <p class="top">Date: {{ date }}</p>
+  <p class="top">Time: {{ time }}</p>
+  <p class="top">Table: #{{ table_no }}</p>
+  <p class="top">Receipt No.: {{ receipt_no }}</p>
+
+  <hr>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th style="text-align:center;">Qty</th>
+        <th style="text-align:right;">Price</th>
+        <th style="text-align:right;">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td>{{ item.name }}</td>
+        <td style="text-align:center;">{{ item.qty }}</td>
+        <td style="text-align:right;">₹ {{ item.price }}</td>
+        <td style="text-align:right;">₹ {{ item.total if item.total is defined else (item.qty * item.price) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <hr>
+
+  <div class="totals">
+    <p>Sub Total: ₹ {{ sub_total }}</p>
+    <p>CGST (2.5%): ₹ {{ cgst }}</p>
+    <p>SGST (2.5%): ₹ {{ sgst }}</p>
+    <p>Total: ₹ {{ grandTotal }}</p>
+    <p>Mode: {{ payment_mode }}</p>
+  </div>
+
+  <hr>
+
+  <p class="bottom">{{ theme.footer_text | default('SAVE PAPER SAVE NATURE !!<br>Thank you for a delicious meal.') }}</p>
+
+</body>
+</html>
